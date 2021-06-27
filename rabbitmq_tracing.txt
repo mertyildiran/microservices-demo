@@ -1,0 +1,69 @@
+$ docker exec -it fd663b1db2dd bash
+$ rabbitmqctl trace_on
+$ rabbitmq-plugins enable rabbitmq_tracing
+
+
+trace.log:
+
+================================================================================
+2021-06-27 15:07:52:036: Message published
+
+Node:         rabbit@rabbitmq
+Connection:   172.19.0.9:55940 -> 172.19.0.11:5672
+Virtual host: /
+User:         guest
+Channel:      1
+Exchange:     
+Routing keys: [<<"shipping-task">>]
+Routed queues: [<<"shipping-task">>]
+Properties:   [{<<"priority">>,signedint,0},
+               {<<"delivery_mode">>,signedint,2},
+               {<<"headers">>,table,
+                [{<<"__TypeId__">>,longstr,
+                  <<"works.weave.socks.shipping.entities.Shipment">>}]},
+               {<<"content_encoding">>,longstr,<<"UTF-8">>},
+               {<<"content_type">>,longstr,<<"application/json">>}]
+Payload: 
+{"id":"2ea440f9-f221-4baf-bb21-5af70a4dc1cd","name":"60d8942dee11cb000156d96a"}
+
+================================================================================
+2021-06-27 15:07:52:036: Message received
+
+Node:         rabbit@rabbitmq
+Connection:   172.19.0.3:60166 -> 172.19.0.11:5672
+Virtual host: /
+User:         guest
+Channel:      1
+Exchange:     
+Routing keys: [<<"shipping-task">>]
+Queue:        shipping-task
+Properties:   [{<<"priority">>,signedint,0},
+               {<<"delivery_mode">>,signedint,2},
+               {<<"headers">>,table,
+                [{<<"__TypeId__">>,longstr,
+                  <<"works.weave.socks.shipping.entities.Shipment">>}]},
+               {<<"content_encoding">>,longstr,<<"UTF-8">>},
+               {<<"content_type">>,longstr,<<"application/json">>}]
+Payload: 
+{"id":"2ea440f9-f221-4baf-bb21-5af70a4dc1cd","name":"60d8942dee11cb000156d96a"}
+
+================================================================================
+2021-06-27 15:07:52:507: Message received
+
+Node:         rabbit@rabbitmq
+Connection:   172.19.0.3:60166 -> 172.19.0.11:5672
+Virtual host: /
+User:         guest
+Channel:      1
+Exchange:     
+Routing keys: [<<"shipping-task">>]
+Queue:        shipping-task
+Properties:   [{<<"priority">>,signedint,0},
+               {<<"delivery_mode">>,signedint,2},
+               {<<"headers">>,table,
+                [{<<"__TypeId__">>,longstr,
+                  <<"works.weave.socks.shipping.entities.Shipment">>}]},
+               {<<"content_encoding">>,longstr,<<"UTF-8">>},
+               {<<"content_type">>,longstr,<<"application/json">>}]
+Payload: 
+{"id":"2ea440f9-f221-4baf-bb21-5af70a4dc1cd","name":"60d8942dee11cb000156d96a"}
