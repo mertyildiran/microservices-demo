@@ -1,0 +1,23 @@
+templatingEngine: Jinja2
+management:
+  port: 8000
+services:
+- port: 8079
+  hostname: front-end
+  fallbackTo: "http://front-end-orig:8079"
+  endpoints:
+  - path: /img/logo.png
+    method: GET
+    response: "@res/logo.png"
+  - path: /img/logo-small.png
+    method: GET
+    response: "@res/logo-small.png"
+  - path: /img/rugby_socks_banner.jpg
+    method: GET
+    response: "@res/cat1.jpg"
+  - path: /img/colourful_socks_banner.jpg
+    method: GET
+    response: "@res/cat2.jpg"
+  - path: /img/holy_socks_banner.jpg
+    method: GET
+    response: "@res/cat3.jpg"

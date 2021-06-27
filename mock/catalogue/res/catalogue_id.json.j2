@@ -1,0 +1,13 @@
+{
+    "id": "{{ id }}",
+    "name": "{{ fake.sentence(nb_words=3)[:-1] | title }}",
+    "description": "{{ fake.sentence(nb_words=10) }}",
+    "imageUrl": [
+    {% for n in range(range(1, 5) | random) %}    "https://loremflickr.com/450/600/cat?random={{ fake.random_int(min=0, max=1000, step=1) }}"{% if not loop.last %},{% endif %}
+    {% endfor %}],
+    "price": {{ random.float('0', '100', 2) }},
+    "count": {{ random.int(0, 100) }},
+    "tag": [
+    {% for n in range(range(1, 5) | random) %}    "{{ fake.sentence(nb_words=1) }}"{% if not loop.last %},{% endif %}
+    {% endfor %}]
+}

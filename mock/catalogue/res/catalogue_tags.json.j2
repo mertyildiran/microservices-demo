@@ -1,0 +1,6 @@
+{
+    "tags": [
+    {% for n in range(range(1, 5) | random) %}    "{{ fake.sentence(nb_words=1) }}"{% if not loop.last %},{% endif %}
+    {% endfor %}],
+    "err": null
+}

@@ -1,0 +1,37 @@
+templatingEngine: Jinja2
+management:
+  port: 8000
+services:
+- port: 80
+  hostname: catalogue
+  endpoints:
+  - path: /catalogue
+    method: GET
+    queryString:
+        size: "{{ size }}"
+    response:
+    - status: 200
+      headers:
+        Content-Type: application/json; charset=UTF-8
+      body: '@res/catalogue.json.j2'
+  - path: /catalogue/{{ id }}
+    method: GET
+    response:
+    - status: 200
+      headers:
+        Content-Type: application/json; charset=UTF-8
+      body: '@res/catalogue_id.json.j2'
+  - path: /catalogue/size
+    method: GET
+    response:
+    - status: 200
+      headers:
+        Content-Type: application/json; charset=UTF-8
+      body: '@res/catalogue_size.json.j2'
+  - path: /tags
+    method: GET
+    response:
+    - status: 200
+      headers:
+        Content-Type: application/json; charset=UTF-8
+      body: '@res/catalogue_tags.json.j2'
