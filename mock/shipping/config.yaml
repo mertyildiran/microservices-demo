@@ -1,0 +1,22 @@
+management:
+  port: 8000
+services:
+- port: 8080
+  hostname: shipping
+  fallbackTo: "http://shipping-orig:8080"
+- type: amqp
+  address: rabbitmq:5672
+  actors:
+    - produce:
+        queue: shipping-task
+        create: true
+        key: shipping-task
+        value: '{"id":"2ea440f9-f221-4baf-bb21-5af70a4dc1cd","name":"60d8942dee11cb000156d96a"}'
+        headers:
+          priority: '0'
+          delivery_mode: '2'
+          headers: "[works.weave.socks.shipping.entities.Shipment]"
+          content_encoding: "UTF-8"
+          content_type: "application/json"
+      delay: 2
+      limit: 100

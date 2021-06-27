@@ -115,8 +115,21 @@ services:
     tmpfs:
       - /tmp:rw,noexec,nosuid
   shipping:
-    image: weaveworksdemos/shipping:0.4.8
+    image: up9inc/mockintosh:latest
     hostname: shipping
+    restart: always
+    cap_add:
+      - NET_BIND_SERVICE
+    command:
+      - /tmp/shipping/config.yaml
+      - -v
+    volumes:
+      - type: bind
+        source: ../../mock
+        target: /tmp
+  shipping-old:
+    image: weaveworksdemos/shipping:0.4.8
+    hostname: shipping-old
     restart: always
     cap_drop:
       - all
