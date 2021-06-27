@@ -141,7 +141,7 @@ services:
     tmpfs:
       - /tmp:rw,noexec,nosuid
   rabbitmq:
-    image: rabbitmq:3.6.8
+    image: rabbitmq:management
     hostname: rabbitmq
     restart: always
     cap_drop:
@@ -151,7 +151,9 @@ services:
       - SETGID
       - SETUID
       - DAC_OVERRIDE
-    read_only: true
+    read_only: false
+    ports:
+      - '15672:15672'
   payment:
     image: weaveworksdemos/payment:0.4.3
     hostname: payment
