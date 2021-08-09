@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mockintosh
+spec:
+  containers:
+  - image: ubuntu
+    name: mockintosh
+    command:
+      - /bin/bash
+      - -c
+      - ls -la /data && cat /data/config.yaml
+    volumeMounts:
+    - mountPath: /data
+      name: data
+  volumes:
+  - name: data
+    hostPath:
+      path: /data

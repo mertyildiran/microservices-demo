@@ -1,0 +1,151 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mockintosh
+  labels:
+    name: mockintosh
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mockintosh
+  template:
+    metadata:
+      labels:
+        name: mockintosh
+    spec:
+      containers:
+      - name: mockintosh
+        image: up9inc/mockintosh:latest
+        command:
+          - mockintosh
+          - /data/config.yaml
+          - -v
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        # args:
+        # - -port=80
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8001
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+              - all
+            add:
+              - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 300
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 180
+          periodSeconds: 3
+      volumes:
+      - name: data
+        hostPath:
+          path: /data
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mockintosh
+  annotations:
+        prometheus.io/scrape: 'true'
+  labels:
+    name: mockintosh
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+  - port: 8001
+    targetPort: 8001
+    nodePort: 30001
+  selector:
+    name: mockintosh
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  labels:
+    name: rabbitmq
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: rabbitmq
+  template:
+    metadata:
+      labels:
+        name: rabbitmq
+      annotations:
+        prometheus.io/scrape: "false"
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3.6.8-management
+        ports:
+        - containerPort: 15672
+          name: management
+        - containerPort: 5672
+          name: rabbitmq
+        securityContext:
+          capabilities:
+            drop:
+              - all
+            add:
+              - CHOWN
+              - SETGID
+              - SETUID
+              - DAC_OVERRIDE
+          readOnlyRootFilesystem: true
+      - name: rabbitmq-exporter
+        image: kbudde/rabbitmq-exporter
+        ports:
+        - containerPort: 9090
+          name: exporter
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9090'
+  labels:
+    name: rabbitmq
+  namespace: default
+spec:
+  ports:
+    # the port that this service should serve on
+  - port: 5672
+    name: rabbitmq
+    targetPort: 5672
+  - port: 9090
+    name: exporter
+    targetPort: exporter
+    protocol: TCP
+  selector:
+    name: rabbitmq
